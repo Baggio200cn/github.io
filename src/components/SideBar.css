@@ -1,0 +1,18 @@
+.sidebar {
+  width: 200px;
+  padding: 16px;
+  background-color: #f5f5f5;
+  border-right: 1px solid #e0e0e0;
+}
+
+.sidebar h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 12px;
+}
+
+.sidebar p {
+  font-size: 12px;
+  color: #666666;
+}
