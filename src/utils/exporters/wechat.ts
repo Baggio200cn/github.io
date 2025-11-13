@@ -1,99 +1,82 @@
 import { renderToHtml } from '../markdown/renderer';
 
 /**
- * Generate inline styles specifically formatted for WeChat Official Account
- * WeChat requires all styles to be inline for proper rendering
+ * 为公众号粘贴生成内联样式 HTML（尽量使用被白名单支持的属性与标签）
  */
 function getWeChatInlineStyles() {
   return {
-    body: 'font-family: -apple-system-font, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI", "Microsoft YaHei", Arial, sans-serif; font-size: 16px; line-height: 1.75; color: #3f3f3f;',
-    h1: 'font-size: 20px; font-weight: bold; color: #0F4C81; margin: 2em 0 0.75em 0; padding-bottom: 8px; border-bottom: 2px solid #0F4C81; line-height: 1.2;',
-    h2: 'font-size: 18px; font-weight: bold; color: #0F4C81; margin: 2em 0 0.75em 0; padding-left: 8px; border-left: 3px solid #0F4C81; line-height: 1.2;',
-    h3: 'font-size: 16px; font-weight: bold; color: #0F4C81; margin: 2em 0 0.75em 0; line-height: 1.2;',
-    h4: 'font-size: 15px; font-weight: bold; color: #0F4C81; margin: 2em 0 0.75em 0; line-height: 1.2;',
-    h5: 'font-size: 14px; font-weight: bold; color: #0F4C81; margin: 2em 0 0.75em 0; line-height: 1.2;',
-    h6: 'font-size: 14px; font-weight: bold; color: #0F4C81; margin: 2em 0 0.75em 0; line-height: 1.2;',
-    p: 'margin: 1.5em 0; letter-spacing: 0.05em; line-height: 1.75;',
-    strong: 'font-weight: bold; color: #0F4C81;',
-    em: 'font-style: italic;',
-    ul: 'padding-left: 2em; margin: 1.5em 0;',
-    ol: 'padding-left: 2em; margin: 1.5em 0;',
-    li: 'margin: 0.5em 0; line-height: 1.75;',
-    blockquote: 'margin: 1.5em 0; padding: 12px 16px; border-left: 4px solid #0F4C81; background-color: rgba(15, 76, 129, 0.05); color: #555555;',
-    code: 'padding: 2px 6px; background-color: rgba(15, 76, 129, 0.08); border-radius: 3px; font-family: Consolas, Monaco, "Courier New", monospace; font-size: 0.9em; color: #c7254e;',
-    pre: 'margin: 1.5em 0; padding: 16px; background-color: #f8f8f8; border: 1px solid #e0e0e0; border-radius: 4px; overflow-x: auto;',
-    a: 'color: #0F4C81; text-decoration: none; border-bottom: 1px solid #0F4C81;',
-    img: 'max-width: 100%; height: auto; margin: 1.5em 0; border-radius: 4px; display: block;',
-    table: 'width: 100%; border-collapse: collapse; margin: 1.5em 0; font-size: 14px;',
-    th: 'border: 1px solid #dfdfdf; padding: 8px 12px; text-align: left; background-color: rgba(0, 0, 0, 0.05); font-weight: bold;',
-    td: 'border: 1px solid #dfdfdf; padding: 8px 12px; text-align: left;',
-    hr: 'border: none; border-top: 2px solid rgba(0, 0, 0, 0.1); margin: 1.5em 0;',
+    body:
+      'font-family:-apple-system-font,BlinkMacSystemFont,"Helvetica Neue","PingFang SC","Hiragino Sans GB","Microsoft YaHei UI","Microsoft YaHei",Arial,sans-serif;font-size:16px;line-height:1.8;color:#222;margin:0;padding:0;',
+    h1: 'font-size:22px;font-weight:700;color:#0F4C81;margin:24px 0 12px;border-bottom:2px solid #0F4C81;padding-bottom:6px;',
+    h2: 'font-size:20px;font-weight:700;color:#0F4C81;margin:22px 0 10px;padding-left:8px;border-left:3px solid #0F4C81;',
+    h3: 'font-size:18px;font-weight:700;color:#0F4C81;margin:20px 0 8px;',
+    h4: 'font-size:16px;font-weight:700;color:#0F4C81;margin:18px 0 8px;',
+    h5: 'font-size:15px;font-weight:700;color:#0F4C81;margin:16px 0 6px;',
+    h6: 'font-size:14px;font-weight:700;color:#0F4C81;margin:14px 0 6px;',
+    p: 'margin:16px 0;line-height:1.8;letter-spacing:.02em;',
+    strong: 'font-weight:700;color:#0F4C81;',
+    em: 'font-style:italic;',
+    ul: 'padding-left:24px;margin:14px 0;',
+    ol: 'padding-left:24px;margin:14px 0;',
+    li: 'margin:6px 0;line-height:1.8;',
+    blockquote:
+      'margin:16px 0;padding:12px 14px;border-left:4px solid #0F4C81;background:#f4f8fb;color:#555;',
+    code:
+      'padding:2px 6px;background:#f1f3f5;border-radius:3px;font-family:Consolas,Monaco,"Courier New",monospace;font-size:.9em;color:#c7254e;',
+    pre:
+      'margin:16px 0;padding:12px;background:#f8f8f8;border:1px solid #e0e0e0;border-radius:4px;overflow-x:auto;',
+    a: 'color:#0F4C81;text-decoration:none;border-bottom:1px solid #0F4C81;',
+    img: 'max-width:100%;height:auto;margin:16px 0;border-radius:4px;display:block;',
+    table: 'width:100%;border-collapse:collapse;margin:16px 0;font-size:14px;',
+    th: 'border:1px solid #dfdfdf;padding:8px 12px;text-align:left;background:#f6f6f6;font-weight:700;',
+    td: 'border:1px solid #dfdfdf;padding:8px 12px;text-align:left;',
+    hr: 'border:none;border-top:2px solid rgba(0,0,0,.08);margin:16px 0;',
   };
 }
 
-/**
- * Apply inline styles to HTML elements for WeChat compatibility
- */
 function applyInlineStyles(html: string): string {
-  const styles = getWeChatInlineStyles();
-  
-  // Apply inline styles to common elements
-  let styledHtml = html;
-  
-  // Wrap content in a div with base styles
-  styledHtml = `<section style="${styles.body}">${styledHtml}</section>`;
-  
-  // Replace element tags with styled versions
-  const styleMap: Record<string, string> = {
-    '<h1': `<h1 style="${styles.h1}"`,
-    '<h2': `<h2 style="${styles.h2}"`,
-    '<h3': `<h3 style="${styles.h3}"`,
-    '<h4': `<h4 style="${styles.h4}"`,
-    '<h5': `<h5 style="${styles.h5}"`,
-    '<h6': `<h6 style="${styles.h6}"`,
-    '<p': `<p style="${styles.p}"`,
-    '<strong': `<strong style="${styles.strong}"`,
-    '<em': `<em style="${styles.em}"`,
-    '<ul': `<ul style="${styles.ul}"`,
-    '<ol': `<ol style="${styles.ol}"`,
-    '<li': `<li style="${styles.li}"`,
-    '<blockquote': `<blockquote style="${styles.blockquote}"`,
-    '<code': `<code style="${styles.code}"`,
-    '<pre': `<pre style="${styles.pre}"`,
-    '<a ': `<a style="${styles.a}" `,
-    '<img': `<img style="${styles.img}"`,
-    '<table': `<table style="${styles.table}"`,
-    '<th': `<th style="${styles.th}"`,
-    '<td': `<td style="${styles.td}"`,
-    '<hr': `<hr style="${styles.hr}"`,
+  const s = getWeChatInlineStyles();
+  let out = html;
+
+  // 外层容器：尽量使用 div 而非 section
+  out = `<div style="${s.body}">${out}</div>`;
+
+  const map: Record<string, string> = {
+    '<h1': `<h1 style="${s.h1}"`,
+    '<h2': `<h2 style="${s.h2}"`,
+    '<h3': `<h3 style="${s.h3}"`,
+    '<h4': `<h4 style="${s.h4}"`,
+    '<h5': `<h5 style="${s.h5}"`,
+    '<h6': `<h6 style="${s.h6}"`,
+    '<p': `<p style="${s.p}"`,
+    '<strong': `<strong style="${s.strong}"`,
+    '<em': `<em style="${s.em}"`,
+    '<ul': `<ul style="${s.ul}"`,
+    '<ol': `<ol style="${s.ol}"`,
+    '<li': `<li style="${s.li}"`,
+    '<blockquote': `<blockquote style="${s.blockquote}"`,
+    '<code': `<code style="${s.code}"`,
+    '<pre': `<pre style="${s.pre}"`,
+    '<a ': `<a style="${s.a}" `,
+    '<img': `<img style="${s.img}"`,
+    '<table': `<table style="${s.table}"`,
+    '<th': `<th style="${s.th}"`,
+    '<td': `<td style="${s.td}"`,
+    '<hr': `<hr style="${s.hr}"`,
   };
 
-  for (const [tag, styledTag] of Object.entries(styleMap)) {
-    styledHtml = styledHtml.replace(new RegExp(tag, 'g'), styledTag);
+  for (const [raw, styled] of Object.entries(map)) {
+    out = out.replace(new RegExp(raw, 'g'), styled);
   }
-
-  return styledHtml;
+  return out;
 }
 
-/**
- * Convert markdown to WeChat-compatible HTML with inline styles
- * WeChat Official Account editor requires inline styles for proper formatting
- */
+/** Markdown -> 公众号可粘贴 HTML（带内联样式） */
 export async function toWeChatHtml(markdown: string): Promise<string> {
-  try {
-    // Render to HTML without IDs/anchors for cleaner WeChat paste
-    const html = await renderToHtml(markdown, { 
-      addIds: false, 
-      addAnchors: false,
-      highlight: false  // WeChat doesn't support syntax highlighting well
-    });
-    
-    // Apply inline styles for WeChat compatibility
-    const styledHtml = applyInlineStyles(html);
-    
-    return styledHtml;
-  } catch (error) {
-    console.error('Error converting to WeChat format:', error);
-    throw error;
-  }
+  const html = await renderToHtml(markdown, {
+    addIds: false,
+    addAnchors: false,
+    highlight: false,
+  });
+  return applyInlineStyles(html);
 }
