@@ -4,6 +4,7 @@ import { toFullHtml, toBareHtml } from '../utils/exporters/html';
 import { toMarkdown } from '../utils/exporters/md';
 import { useToast } from './Toast';
 import './ExportMenu.css';
+import { copyHtmlToClipboard, copyTextToClipboard } from '../utils/clipboard';
 
 interface ExportMenuProps {
   markdown: string;
@@ -14,59 +15,60 @@ export default function ExportMenu({ markdown }: ExportMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null);
   const { addToast } = useToast();
 
-  // Close menu when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     }
-
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
       return () => document.removeEventListener('mousedown', handleClickOutside);
     }
   }, [isOpen]);
 
-  const copyToClipboard = async (text: string, format: string) => {
+  const copyAsHtml = async (html: string, label: string) => {
     try {
-      if (!navigator.clipboard) {
-        throw new Error('Clipboard API not supported');
-      }
-      await navigator.clipboard.writeText(text);
-      addToast(`已复制 ${format} 到剪贴板`, 'success');
+      await copyHtmlToClipboard(html);
+      addToast(`已复制 ${label} 到剪贴板（HTML）`, 'success');
       setIsOpen(false);
-    } catch (error) {
-      console.error('Failed to copy:', error);
-      addToast(`复制失败：${error instanceof Error ? error.message : '未知错误'}`, 'error');
+    } catch (e: any) {
+      console.error(e);
+      addToast(`复制失败：${e?.message ?? '未知错误'}`, 'error');
+    }
+  };
+
+  const copyAsText = async (text: string, label: string) => {
+    try {
+      await copyTextToClipboard(text);
+      addToast(`已复制 ${label} 到剪贴板`, 'success');
+      setIsOpen(false);
+    } catch (e: any) {
+      console.error(e);
+      addToast(`复制失败：${e?.message ?? '未知错误'}`, 'error');
     }
   };
 
   const handleExport = async (type: 'wechat' | 'html-full' | 'html-bare' | 'markdown') => {
     try {
-      let content: string;
-      let format: string;
-
       switch (type) {
-        case 'wechat':
-          content = await toWeChatHtml(markdown);
-          format = 'WeChat 格式';
-          break;
-        case 'html-full':
-          content = await toFullHtml(markdown);
-          format = 'HTML (含样式)';
-          break;
-        case 'html-bare':
-          content = await toBareHtml(markdown);
-          format = 'HTML (无样式)';
-          break;
-        case 'markdown':
-          content = toMarkdown(markdown);
-          format = 'Markdown';
-          break;
+        case 'wechat': {
+          const html = await toWeChatHtml(markdown);
+          return copyAsHtml(html, 'WeChat 格式');
+        }
+        case 'html-full': {
+          const html = await toFullHtml(markdown);
+          return copyAsHtml(html, 'HTML（含样式）');
+        }
+        case 'html-bare': {
+          const html = await toBareHtml(markdown);
+          return copyAsHtml(html, 'HTML（无样式）');
+        }
+        case 'markdown': {
+          const md = toMarkdown(markdown);
+          return copyAsText(md, 'Markdown');
+        }
       }
-
-      await copyToClipboard(content, format);
     } catch (error) {
       console.error('Export failed:', error);
       addToast('导出失败，请重试', 'error');
@@ -83,34 +85,22 @@ export default function ExportMenu({ markdown }: ExportMenuProps) {
       >
         导出 ▾
       </button>
-      
+
       {isOpen && (
         <div className="export-menu-dropdown">
-          <button
-            className="export-menu-item"
-            onClick={() => handleExport('wechat')}
-          >
+          <button className="export-menu-item" onClick={() => handleExport('wechat')}>
             <span className="export-icon">📱</span>
             <span>WeChat 格式</span>
           </button>
-          <button
-            className="export-menu-item"
-            onClick={() => handleExport('html-full')}
-          >
+          <button className="export-menu-item" onClick={() => handleExport('html-full')}>
             <span className="export-icon">🌐</span>
-            <span>HTML (含样式)</span>
+            <span>HTML（含样式）</span>
           </button>
-          <button
-            className="export-menu-item"
-            onClick={() => handleExport('html-bare')}
-          >
+          <button className="export-menu-item" onClick={() => handleExport('html-bare')}>
             <span className="export-icon">📄</span>
-            <span>HTML (无样式)</span>
+            <span>HTML（无样式）</span>
           </button>
-          <button
-            className="export-menu-item"
-            onClick={() => handleExport('markdown')}
-          >
+          <button className="export-menu-item" onClick={() => handleExport('markdown')}>
             <span className="export-icon">📝</span>
             <span>Markdown</span>
           </button>
