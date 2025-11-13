@@ -85,6 +85,16 @@ npm run build
 npm run preview
 ```
 
+### 部署到 GitHub Pages
+
+本项目配置了自动部署到 GitHub Pages。当代码推送到 `main` 分支时，GitHub Actions 会自动构建并部署应用。
+
+手动部署步骤：
+1. 确保代码已推送到 `main` 分支
+2. 在 GitHub 仓库设置中，进入 Settings > Pages
+3. Source 选择 "GitHub Actions"
+4. 部署完成后，访问 `https://<username>.github.io/<repository>/`
+
 ## 使用说明
 
 1. 在左侧编辑区输入 Markdown 内容
