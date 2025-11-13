@@ -1,14 +1,19 @@
 import { useEffect, useRef } from 'react'
 import { markdownToHtml } from '../utils/markdownToHtml'
+import { useSettings } from '../state/useSettings'
 import './MarkdownEditor.css'
 
 interface MarkdownEditorProps {
   value: string
   onChange: (value: string) => void
+  previewRef?: React.RefObject<HTMLDivElement>
 }
 
-function MarkdownEditor({ value, onChange }: MarkdownEditorProps) {
+function MarkdownEditor({ value, onChange, previewRef: externalPreviewRef }: MarkdownEditorProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const internalPreviewRef = useRef<HTMLDivElement>(null)
+  const previewRef = externalPreviewRef || internalPreviewRef
+  const settings = useSettings()
 
   useEffect(() => {
     // Auto-focus on mount
@@ -16,6 +21,13 @@ function MarkdownEditor({ value, onChange }: MarkdownEditorProps) {
       textareaRef.current.focus()
     }
   }, [])
+
+  // Apply custom theme color
+  useEffect(() => {
+    if (previewRef.current) {
+      previewRef.current.style.setProperty('--theme-primary', settings.themeColor);
+    }
+  }, [settings.themeColor, previewRef])
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     onChange(e.target.value)
@@ -40,6 +52,16 @@ function MarkdownEditor({ value, onChange }: MarkdownEditorProps) {
 
   const htmlContent = markdownToHtml(value)
 
+  // Build class names for theme system
+  const previewClassName = [
+    'preview-content',
+    'preview-content-themed',
+    `preview-theme-${settings.theme}`,
+    `preview-font-${settings.fontFamily}`,
+    `preview-size-${settings.fontSize}`,
+    `code-theme-${settings.codeTheme}`,
+  ].join(' ')
+
   return (
     <div className="markdown-editor-container">
       <div className="editor-pane">
@@ -62,7 +84,8 @@ function MarkdownEditor({ value, onChange }: MarkdownEditorProps) {
           <h2>预览区</h2>
         </div>
         <div 
-          className="preview-content"
+          ref={previewRef}
+          className={previewClassName}
           dangerouslySetInnerHTML={{ __html: htmlContent }}
         />
       </div>

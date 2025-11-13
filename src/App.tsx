@@ -1,6 +1,11 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import MarkdownEditor from './components/MarkdownEditor'
+import Toolbar from './components/Toolbar'
+import Outline from './components/Outline'
+import StylePanel from './components/RightPanel/StylePanel'
+import { ToastContainer } from './components/ToastContainer'
 import './App.css'
+import './styles/themes.css'
 
 const INITIAL_MARKDOWN = `# 欢迎使用 Markdown 编辑器
 
@@ -63,13 +68,25 @@ greet('Markdown');
 
 function App() {
   const [markdown, setMarkdown] = useState(INITIAL_MARKDOWN)
+  const previewRef = useRef<HTMLDivElement>(null)
 
   return (
     <div className="app">
-      <MarkdownEditor 
-        value={markdown}
-        onChange={setMarkdown}
-      />
+      <Toolbar markdown={markdown} />
+      
+      <div className="app-main">
+        <Outline markdown={markdown} previewRef={previewRef} />
+        
+        <MarkdownEditor 
+          value={markdown}
+          onChange={setMarkdown}
+          previewRef={previewRef}
+        />
+        
+        <StylePanel />
+      </div>
+      
+      <ToastContainer />
     </div>
   )
 }

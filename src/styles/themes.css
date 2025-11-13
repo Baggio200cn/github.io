@@ -1,0 +1,179 @@
+/* CSS Variables for Theme System */
+
+:root {
+  /* Default/Classic Theme */
+  --theme-primary: #0F4C81;
+  --theme-primary-light: rgba(15, 76, 129, 0.05);
+  --theme-primary-medium: rgba(15, 76, 129, 0.08);
+  
+  /* Font Family */
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;
+  --font-serif: Georgia, 'Times New Roman', 'Songti SC', STSong, serif;
+  --font-mono: 'Courier New', Consolas, Monaco, monospace;
+  
+  /* Font Sizes */
+  --font-size-sm: 14px;
+  --font-size-md: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  
+  /* Typography */
+  --line-height: 1.75;
+  --paragraph-spacing: 1.5em;
+  --heading-spacing-top: 2em;
+  --heading-spacing-bottom: 0.75em;
+  
+  /* Code Theme (placeholders for future expansion) */
+  --code-bg: #f8f8f8;
+  --code-border: #e0e0e0;
+  --code-text: #333333;
+  --code-inline-bg: rgba(15, 76, 129, 0.08);
+  --code-inline-text: #c7254e;
+}
+
+/* Theme Presets */
+.preview-theme-classic {
+  --theme-primary: #0F4C81;
+  --theme-primary-light: rgba(15, 76, 129, 0.05);
+  --theme-primary-medium: rgba(15, 76, 129, 0.08);
+}
+
+.preview-theme-elegant {
+  --theme-primary: #2c3e50;
+  --theme-primary-light: rgba(44, 62, 80, 0.05);
+  --theme-primary-medium: rgba(44, 62, 80, 0.08);
+  --line-height: 1.8;
+  --paragraph-spacing: 1.75em;
+  --font-size-md: 17px;
+}
+
+.preview-theme-simple {
+  --theme-primary: #333333;
+  --theme-primary-light: rgba(0, 0, 0, 0.03);
+  --theme-primary-medium: rgba(0, 0, 0, 0.05);
+  --line-height: 1.6;
+  --paragraph-spacing: 1.25em;
+  --heading-spacing-top: 1.5em;
+}
+
+/* Font Family Classes */
+.preview-font-sans {
+  --font-family: var(--font-sans);
+}
+
+.preview-font-serif {
+  --font-family: var(--font-serif);
+}
+
+.preview-font-mono {
+  --font-family: var(--font-mono);
+}
+
+/* Font Size Classes */
+.preview-size-sm {
+  --base-font-size: var(--font-size-sm);
+}
+
+.preview-size-md {
+  --base-font-size: var(--font-size-md);
+}
+
+.preview-size-lg {
+  --base-font-size: var(--font-size-lg);
+}
+
+.preview-size-xl {
+  --base-font-size: var(--font-size-xl);
+}
+
+/* Code Theme Classes (placeholders) */
+.code-theme-github-light {
+  --code-bg: #f6f8fa;
+  --code-border: #d0d7de;
+  --code-text: #24292f;
+}
+
+.code-theme-github-dark {
+  --code-bg: #161b22;
+  --code-border: #30363d;
+  --code-text: #c9d1d9;
+}
+
+.code-theme-one-dark {
+  --code-bg: #282c34;
+  --code-border: #3e4451;
+  --code-text: #abb2bf;
+}
+
+.code-theme-solarized-light {
+  --code-bg: #fdf6e3;
+  --code-border: #eee8d5;
+  --code-text: #657b83;
+}
+
+/* Apply theme variables to preview content */
+.preview-content-themed {
+  font-family: var(--font-family, var(--font-sans));
+  font-size: var(--base-font-size, var(--font-size-md));
+  line-height: var(--line-height);
+  color: #3f3f3f;
+}
+
+.preview-content-themed h1,
+.preview-content-themed h2,
+.preview-content-themed h3,
+.preview-content-themed h4,
+.preview-content-themed h5,
+.preview-content-themed h6 {
+  color: var(--theme-primary);
+}
+
+.preview-content-themed h1 {
+  border-bottom-color: var(--theme-primary);
+}
+
+.preview-content-themed h2 {
+  border-left-color: var(--theme-primary);
+}
+
+.preview-content-themed strong {
+  color: var(--theme-primary);
+}
+
+.preview-content-themed p {
+  margin: var(--paragraph-spacing) 0;
+}
+
+.preview-content-themed h1,
+.preview-content-themed h2,
+.preview-content-themed h3,
+.preview-content-themed h4,
+.preview-content-themed h5,
+.preview-content-themed h6 {
+  margin-top: var(--heading-spacing-top);
+  margin-bottom: var(--heading-spacing-bottom);
+}
+
+.preview-content-themed blockquote {
+  border-left-color: var(--theme-primary);
+  background-color: var(--theme-primary-light);
+}
+
+.preview-content-themed code {
+  background-color: var(--code-inline-bg);
+  color: var(--code-inline-text);
+}
+
+.preview-content-themed pre {
+  background-color: var(--code-bg);
+  border-color: var(--code-border);
+}
+
+.preview-content-themed pre code {
+  color: var(--code-text);
+}
+
+.preview-content-themed a {
+  color: var(--theme-primary);
+  border-bottom-color: var(--theme-primary);
+}
