@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react'                                                                                       
+import React, { useEffect, useRef } from 'react'                                                                                
   import { markdownToHtml } from '../utils/markdownToHtml'                                                                        
-  import { useSettings } from '../state/useSettings'
+  import { useSettings } from '../state/useSettings'                                                                              
   import './MarkdownEditor.css'                                                                                                   
                                                                                                                                   
   interface MarkdownEditorProps {                                                                                                 
@@ -9,7 +9,11 @@ import { useEffect, useRef } from 'react'
     previewRef?: React.RefObject<HTMLDivElement>                                                                                  
   }                                                                                                                               
                                                                                                                                   
-  function MarkdownEditor({ value, onChange, previewRef: externalPreviewRef }: MarkdownEditorProps) {                             
+  function MarkdownEditor({                                                                                                       
+    value,                                                                                                                        
+    onChange,                                                                                                                     
+    previewRef: externalPreviewRef,                                                                                               
+  }: MarkdownEditorProps) {                                                                                                       
     const textareaRef = useRef<HTMLTextAreaElement>(null)                                                                         
     const internalPreviewRef = useRef<HTMLDivElement>(null)                                                                       
     const previewRef = externalPreviewRef || internalPreviewRef                                                                   
@@ -25,7 +29,10 @@ import { useEffect, useRef } from 'react'
     // 根据自定义主题色更新预览区域的 CSS 变量                                                                                    
     useEffect(() => {                                                                                                             
       if (previewRef.current) {                                                                                                   
-        previewRef.current.style.setProperty('--theme-primary', settings.themeColor)                                              
+        previewRef.current.style.setProperty(                                                                                     
+          '--theme-primary',                                                                                                      
+          settings.themeColor,                                                                                                    
+        )                                                                                                                         
       }                                                                                                                           
     }, [settings.themeColor, previewRef])                                                                                         
                                                                                                                                   
@@ -33,24 +40,25 @@ import { useEffect, useRef } from 'react'
       onChange(e.target.value)                                                                                                    
     }                                                                                                                             
                                                                                                                                   
-    // Tab 缩进                                                                                                                   
+    // Tab 缩进为两个空格                                                                                                         
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {                                                      
       if (e.key === 'Tab') {                                                                                                      
         e.preventDefault()                                                                                                        
         const textarea = e.currentTarget                                                                                          
         const start = textarea.selectionStart                                                                                     
         const end = textarea.selectionEnd                                                                                         
-        const newValue = value.substring(0, start) + '  ' + value.substring(end)                                                  
+                                                                                                                                  
+        const newValue =                                                                                                          
+          value.substring(0, start) + '  ' + value.substring(end)                                                                 
         onChange(newValue)                                                                                                        
                                                                                                                                   
-        // 将光标移动到插入空格之后                                                                                               
-        setTimeout(() => {                                                                                                        
+        window.setTimeout(() => {                                                                                                 
           textarea.selectionStart = textarea.selectionEnd = start + 2                                                             
         }, 0)                                                                                                                     
       }                                                                                                                           
     }                                                                                                                             
                                                                                                                                   
-    // 插入图片：在当前光标位置插入 ![alt](url)                                                                                   
+    // 在当前位置插入图片语法                                                                                                     
     const handleInsertImage = () => {                                                                                             
       const url = window.prompt('请输入图片地址 URL：')                                                                           
       if (!url) return                                                                                                            
@@ -76,8 +84,8 @@ import { useEffect, useRef } from 'react'
       onChange(newValue)                                                                                                          
                                                                                                                                   
       // 把光标移动到插入片段之后                                                                                                 
-      requestAnimationFrame(() => {                                                                                               
-        const pos = start + snippet.length
+      window.requestAnimationFrame(() => {                                                                                        
+        const pos = start + snippet.length                                                                                        
         textarea.selectionStart = textarea.selectionEnd = pos                                                                     
         textarea.focus()                                                                                                          
       })                                                                                                                          
@@ -90,19 +98,18 @@ import { useEffect, useRef } from 'react'
       'preview-content',                                                                                                          
       'preview-content-themed',                                                                                                   
       `preview-theme-${settings.theme}`,                                                                                          
-      `preview-font-${settings.fontFamily}`,                                                                                      
+      `preview-font-${settings.fontFamily}`,
       `preview-size-${settings.fontSize}`,                                                                                        
       `code-theme-${settings.codeTheme}`,                                                                                         
     ].join(' ')                                                                                                                   
                                                                                                                                   
     return (                                                                                                                      
-      <div className="markdown-editor-container">
+      <div className="markdown-editor-container">                                                                                 
         <div className="editor-pane">                                                                                             
           <div className="pane-header">                                                                                           
             <h2>编辑区</h2>                                                                                                       
           </div>                                                                                                                  
                                                                                                                                   
-          {/* 简单编辑工具栏：目前只加了插入图片 */}                                                                              
           <div className="editor-toolbar">                                                                                        
             <button                                                                                                               
               type="button"                                                                                                       
@@ -118,7 +125,7 @@ import { useEffect, useRef } from 'react'
             className="editor-textarea"                                                                                           
             value={value}                                                                                                         
             onChange={handleChange}                                                                                               
-            onKeyDown={handleKeyDown}
+            onKeyDown={handleKeyDown}                                                                                             
             placeholder="在此输入 Markdown 内容..."                                                                               
             spellCheck={false}                                                                                                    
           />                                                                                                                      
@@ -140,12 +147,38 @@ import { useEffect, useRef } from 'react'
                                                                                                                                   
   export default MarkdownEditor                                                                                                   
                                                                                                                                   
-  CSS 你可以按需简单加两行（在 MarkdownEditor.css 里）：                                                                          
+  src/components/MarkdownEditor.css                                                                                               
+  （如果已有同名文件，可以在原基础上合并这些样式）                                                                                
+                                                                                                                                  
+  .markdown-editor-container {                                                                                                    
+    display: flex;                                                                                                                
+    height: 100%;                                                                                                                 
+  }                                                                                                                               
+                                                                                                                                  
+  .editor-pane,                                                                                                                   
+  .preview-pane {                                                                                                                 
+    flex: 1;                                                                                                                      
+    display: flex;                                                                                                                
+    flex-direction: column;                                                                                                       
+    min-height: 0;                                                                                                                
+  }                                                                                                                               
+                                                                                                                                  
+  .preview-pane {                                                                                                                 
+    border-left: 1px solid #e0e0e0;                                                                                               
+  }                                                                                                                               
+                                                                                                                                  
+  .pane-header {                                                                                                                  
+    padding: 8px 12px;                                                                                                            
+    border-bottom: 1px solid #e0e0e0;                                                                                             
+    font-size: 14px;                                                                                                              
+    font-weight: 500;                                                                                                             
+  }                                                                                                                               
                                                                                                                                   
   .editor-toolbar {                                                                                                               
     display: flex;                                                                                                                
     gap: 8px;                                                                                                                     
-    margin-bottom: 8px;                                                                                                           
+    padding: 8px 12px;                                                                                                            
+    border-bottom: 1px solid #e0e0e0;                                                                                             
   }                                                                                                                               
                                                                                                                                   
   .editor-toolbar-button {                                                                                                        
@@ -157,6 +190,31 @@ import { useEffect, useRef } from 'react'
     color: inherit;                                                                                                               
     cursor: pointer;                                                                                                              
   }                                                                                                                               
+                                                                                                                                  
   .editor-toolbar-button:hover {                                                                                                  
     background: rgba(75, 140, 255, 0.12);                                                                                         
-  }                                                                    
+  }                                                                                                                               
+                                                                                                                                  
+  .editor-textarea {                                                                                                              
+    flex: 1;                                                                                                                      
+    width: 100%;                                                                                                                  
+    padding: 12px;                                                                                                                
+    border: none;                                                                                                                 
+    outline: none;                                                                                                                
+    resize: none;                                                                                                                 
+    font-family: var(--editor-font, monospace);                                                                                   
+    font-size: 14px;                                                                                                              
+    line-height: 1.5;                                                                                                             
+  }                                                                                                                               
+                                                                                                                                  
+  .preview-content {                                                                                                              
+    padding: 12px;                                                                                                                
+    overflow: auto;                                                                                                               
+    height: 100%;                                                                                                                 
+  }                                                                                                                               
+                                                                                                                                  
+  .preview-content-themed {                                                                                                       
+    background-color: var(--preview-bg, #ffffff);                                                                                 
+    color: var(--preview-fg, #111111);                                                                                            
+  }                                                                                                                               
+                                                                           
