@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from 'react'                                                                                
+                                                                                                   
+  import React, { useEffect, useRef } from 'react'                                                                                
   import { markdownToHtml } from '../utils/markdownToHtml'                                                                        
   import { useSettings } from '../state/useSettings'                                                                              
   import './MarkdownEditor.css'                                                                                                   
@@ -14,11 +15,11 @@ import React, { useEffect, useRef } from 'react'
     onChange,                                                                                                                     
     previewRef: externalPreviewRef,                                                                                               
   }: MarkdownEditorProps) {                                                                                                       
-    const textareaRef = useRef<HTMLTextAreaElement>(null)                                                                         
+    const textareaRef = useRef<HTMLTextAreaElement>(null)
     const internalPreviewRef = useRef<HTMLDivElement>(null)                                                                       
     const previewRef = externalPreviewRef || internalPreviewRef                                                                   
     const settings = useSettings()                                                                                                
-                                                                                                                                  
+
     // 首次挂载时自动聚焦编辑区                                                                                                   
     useEffect(() => {                                                                                                             
       if (textareaRef.current) {                                                                                                  
@@ -40,10 +41,10 @@ import React, { useEffect, useRef } from 'react'
       onChange(e.target.value)                                                                                                    
     }                                                                                                                             
                                                                                                                                   
-    // Tab 缩进为两个空格                                                                                                         
+    // Tab 缩进为两个空格
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {                                                      
       if (e.key === 'Tab') {                                                                                                      
-        e.preventDefault()                                                                                                        
+        e.preventDefault()
         const textarea = e.currentTarget                                                                                          
         const start = textarea.selectionStart                                                                                     
         const end = textarea.selectionEnd                                                                                         
@@ -59,7 +60,7 @@ import React, { useEffect, useRef } from 'react'
     }                                                                                                                             
                                                                                                                                   
     // 在当前位置插入图片语法                                                                                                     
-    const handleInsertImage = () => {                                                                                             
+    const handleInsertImage = () => {
       const url = window.prompt('请输入图片地址 URL：')                                                                           
       if (!url) return                                                                                                            
                                                                                                                                   
@@ -96,9 +97,9 @@ import React, { useEffect, useRef } from 'react'
     // 预览区域的主题相关 class                                                                                                   
     const previewClassName = [                                                                                                    
       'preview-content',                                                                                                          
-      'preview-content-themed',                                                                                                   
+      'preview-content-themed',
       `preview-theme-${settings.theme}`,                                                                                          
-      `preview-font-${settings.fontFamily}`,
+      `preview-font-${settings.fontFamily}`,                                                                                      
       `preview-size-${settings.fontSize}`,                                                                                        
       `code-theme-${settings.codeTheme}`,                                                                                         
     ].join(' ')                                                                                                                   
@@ -128,7 +129,7 @@ import React, { useEffect, useRef } from 'react'
             onKeyDown={handleKeyDown}                                                                                             
             placeholder="在此输入 Markdown 内容..."                                                                               
             spellCheck={false}                                                                                                    
-          />                                                                                                                      
+          />
         </div>                                                                                                                    
                                                                                                                                   
         <div className="preview-pane">                                                                                            
@@ -141,80 +142,9 @@ import React, { useEffect, useRef } from 'react'
             dangerouslySetInnerHTML={{ __html: htmlContent }}                                                                     
           />                                                                                                                      
         </div>                                                                                                                    
-      </div>                                                                                                                      
+      </div>
     )                                                                                                                             
   }                                                                                                                               
                                                                                                                                   
-  export default MarkdownEditor                                                                                                   
-                                                                                                                                  
-  src/components/MarkdownEditor.css                                                                                               
-  （如果已有同名文件，可以在原基础上合并这些样式）                                                                                
-                                                                                                                                  
-  .markdown-editor-container {                                                                                                    
-    display: flex;                                                                                                                
-    height: 100%;                                                                                                                 
-  }                                                                                                                               
-                                                                                                                                  
-  .editor-pane,                                                                                                                   
-  .preview-pane {                                                                                                                 
-    flex: 1;                                                                                                                      
-    display: flex;                                                                                                                
-    flex-direction: column;                                                                                                       
-    min-height: 0;                                                                                                                
-  }                                                                                                                               
-                                                                                                                                  
-  .preview-pane {                                                                                                                 
-    border-left: 1px solid #e0e0e0;                                                                                               
-  }                                                                                                                               
-                                                                                                                                  
-  .pane-header {                                                                                                                  
-    padding: 8px 12px;                                                                                                            
-    border-bottom: 1px solid #e0e0e0;                                                                                             
-    font-size: 14px;                                                                                                              
-    font-weight: 500;                                                                                                             
-  }                                                                                                                               
-                                                                                                                                  
-  .editor-toolbar {                                                                                                               
-    display: flex;                                                                                                                
-    gap: 8px;                                                                                                                     
-    padding: 8px 12px;                                                                                                            
-    border-bottom: 1px solid #e0e0e0;                                                                                             
-  }                                                                                                                               
-                                                                                                                                  
-  .editor-toolbar-button {                                                                                                        
-    padding: 4px 10px;                                                                                                            
-    font-size: 12px;                                                                                                              
-    border-radius: 4px;                                                                                                           
-    border: 1px solid var(--theme-primary, #4b8cff);                                                                              
-    background: transparent;                                                                                                      
-    color: inherit;                                                                                                               
-    cursor: pointer;                                                                                                              
-  }                                                                                                                               
-                                                                                                                                  
-  .editor-toolbar-button:hover {                                                                                                  
-    background: rgba(75, 140, 255, 0.12);                                                                                         
-  }                                                                                                                               
-                                                                                                                                  
-  .editor-textarea {                                                                                                              
-    flex: 1;                                                                                                                      
-    width: 100%;                                                                                                                  
-    padding: 12px;                                                                                                                
-    border: none;                                                                                                                 
-    outline: none;                                                                                                                
-    resize: none;                                                                                                                 
-    font-family: var(--editor-font, monospace);                                                                                   
-    font-size: 14px;                                                                                                              
-    line-height: 1.5;                                                                                                             
-  }                                                                                                                               
-                                                                                                                                  
-  .preview-content {                                                                                                              
-    padding: 12px;                                                                                                                
-    overflow: auto;                                                                                                               
-    height: 100%;                                                                                                                 
-  }                                                                                                                               
-                                                                                                                                  
-  .preview-content-themed {                                                                                                       
-    background-color: var(--preview-bg, #ffffff);                                                                                 
-    color: var(--preview-fg, #111111);                                                                                            
-  }                                                                                                                               
-                                                                           
+  export default MarkdownEditor                                                                                               
+  
